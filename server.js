@@ -12,35 +12,36 @@ app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.static('dist'))
 
-var phonebook = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+const mongoose = require('mongoose')
+
+const Person = require('./models/person')
+
+if (process.argv.length<3) {
+    console.log('give password as argument')
+    process.exit(1)
+  }
+  
+const password = process.argv[2]
+
+mongoose.set('strictQuery',false)
+
+mongoose.connect(url)
+
+
+
+
+
+
+
 
 function GetId(){
     return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
 }
 
 app.get('/api/persons', (request, response) => {
-    response.json(phonebook)
+    Person.find({}).then(people => {
+        response.json(people)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
